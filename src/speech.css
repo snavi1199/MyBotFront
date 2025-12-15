@@ -1,0 +1,58 @@
+.app-container {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+}
+
+.status {
+  margin: 8px 0;
+  font-weight: bold;
+}
+
+.button-row button {
+  margin-right: 6px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.chat {
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 6px;
+}
+
+.chat.user {
+  background: #eeeeee;
+}
+
+.chat.ai {
+  background: #e8f5e9;
+}
+
+.thinking {
+  margin-top: 10px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+/* Code Styling */
+.code-block {
+  background: #1e1e1e;
+  color: #f8f8f2;
+  padding: 12px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 10px 0;
+  font-family: "Courier New", monospace;
+  font-size: 14px;
+}
