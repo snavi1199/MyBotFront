@@ -56,3 +56,27 @@
   font-family: "Courier New", monospace;
   font-size: 14px;
 }
+
+.compact-text {
+    margin: 4px 0;
+    line-height: 1.4;
+}
+
+.compact-list {
+    margin: 4px 0 6px 18px;
+    padding: 0;
+}
+
+.compact-list li {
+    margin: 2px 0;
+    line-height: 1.4;
+}
+
+h1, h2, h3 {
+    margin: 6px 0 4px;
+}
+
+.code-block {
+    margin: 6px 0;
+    padding: 10px;
+}
