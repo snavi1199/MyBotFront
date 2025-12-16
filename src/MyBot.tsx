@@ -185,7 +185,6 @@ const ResponseRenderer = ({ text }: { text: string }) => {
     return (
         <>
             {blocks.map((block, blockIndex) => {
-                // CODE BLOCK
                 if (blockIndex % 2 === 1) {
                     return (
                         <pre key={blockIndex} className="code-block">
@@ -195,7 +194,7 @@ const ResponseRenderer = ({ text }: { text: string }) => {
                 }
 
                 const lines = block.split("\n");
-                const elements: JSX.Element[] = [];
+                const elements: React.ReactNode[] = [];
 
                 let bulletBuffer: string[] = [];
                 let numberBuffer: string[] = [];
@@ -204,7 +203,9 @@ const ResponseRenderer = ({ text }: { text: string }) => {
                     if (bulletBuffer.length) {
                         elements.push(
                             <ul key={`ul-${elements.length}`} className="compact-list">
-                                {bulletBuffer.map((b, i) => <li key={i}>{b}</li>)}
+                                {bulletBuffer.map((b, i) => (
+                                    <li key={i}>{b}</li>
+                                ))}
                             </ul>
                         );
                         bulletBuffer = [];
@@ -215,7 +216,9 @@ const ResponseRenderer = ({ text }: { text: string }) => {
                     if (numberBuffer.length) {
                         elements.push(
                             <ol key={`ol-${elements.length}`} className="compact-list">
-                                {numberBuffer.map((n, i) => <li key={i}>{n}</li>)}
+                                {numberBuffer.map((n, i) => (
+                                    <li key={i}>{n}</li>
+                                ))}
                             </ol>
                         );
                         numberBuffer = [];
@@ -226,7 +229,6 @@ const ResponseRenderer = ({ text }: { text: string }) => {
                     const t = line.trim();
                     if (!t) return;
 
-                    // Headings
                     if (t.startsWith("### ")) {
                         flushBullets();
                         flushNumbers();
@@ -241,24 +243,23 @@ const ResponseRenderer = ({ text }: { text: string }) => {
                         return;
                     }
 
-                    // Bullet points
                     if (t.startsWith("- ") || t.startsWith("* ")) {
                         flushNumbers();
                         bulletBuffer.push(t.slice(2));
                         return;
                     }
 
-                    // Numbered points
                     if (/^\d+\.\s/.test(t)) {
                         flushBullets();
                         numberBuffer.push(t.replace(/^\d+\.\s/, ""));
                         return;
                     }
 
-                    // Normal paragraph
                     flushBullets();
                     flushNumbers();
-                    elements.push(<p key={i} className="compact-text">{t}</p>);
+                    elements.push(
+                        <p key={i} className="compact-text">{t}</p>
+                    );
                 });
 
                 flushBullets();
@@ -269,3 +270,4 @@ const ResponseRenderer = ({ text }: { text: string }) => {
         </>
     );
 };
+
