@@ -7,7 +7,9 @@ const MyBot: React.FC = () => {
 
     const [response, setResponse] = useState("");
     const [loading, setLoading] = useState(false);
-    const [role, setRole] = useState("Full Stack Developer provide coding on both Javascript and Java - Interview Helper");
+    const [role, setRole] = useState(
+    "You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code, and interview tips."
+    );
     const [error, setError] = useState("");
     const [rememberContext, setRememberContext] = useState(false);
     const [savedPrompts, setSavedPrompts] = useState<string[]>([]);
@@ -109,13 +111,31 @@ const MyBot: React.FC = () => {
             <h2>My Bot</h2>
 
             <select className="input" value={role} onChange={(e) => setRole(e.target.value)}>
-                <option value="Full Stack Developer provide coding on both Javascript and Java - Interview Helper">Full Stack Developer - Interview Helper</option>
-                <option value="Code using Javascript">JavaScript Coding</option>
-                <option value="Code using Java">Java Coding</option>
-                <option value="Java DSA Interview">Java DSA Interview</option>
-                <option value="Low Level System Design">Low Level System Design</option>
-                <option value="High Level System Design">High Level System Design</option>
-            </select>
+    <option value="You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code, and interview tips.">
+        Full Stack Interview Helper (JS + Java)
+    </option>
+
+    <option value="You are a JavaScript expert. Provide JavaScript code examples and explanations.">
+        JavaScript Coding
+    </option>
+
+    <option value="You are a Java expert. Provide Java code examples and explanations.">
+        Java Coding
+    </option>
+
+    <option value="You are a Java DSA Interviewer. Explain approach, algorithm, Java code, and complexity.">
+        Java DSA Interview
+    </option>
+
+    <option value="You are a Low Level System Design interviewer. Explain with diagrams, classes, and code snippets.">
+        Low Level System Design
+    </option>
+
+    <option value="You are a High Level System Design interviewer. Explain architecture, trade-offs, and scalability.">
+        High Level System Design
+    </option>
+</select>
+
 
             <p className="status">
                 {listening ? "🎤 Listening..." : "⏹ Stopped"}
@@ -160,21 +180,61 @@ export default MyBot;
 /* ---------- Code Renderer ---------- */
 
 const ResponseRenderer = ({ text }: { text: string }) => {
-    const parts = text.split(/```/g);
+    const blocks = text.split(/```/g);
 
     return (
         <>
-            {parts.map((part, index) =>
-                index % 2 === 1 ? (
-                    <pre key={index} className="code-block">
-                        <code>{part.trim()}</code>
-                    </pre>
-                ) : (
-                    <p key={index}>{part}</p>
-                )
-            )}
+            {blocks.map((block, i) => {
+                // CODE BLOCK
+                if (i % 2 === 1) {
+                    return (
+                        <pre key={i} className="code-block">
+                            <code>{block.trim()}</code>
+                        </pre>
+                    );
+                }
+
+                // NORMAL TEXT BLOCK
+                return block.split("\n").map((line, idx) => {
+                    const trimmed = line.trim();
+
+                    // Headings
+                    if (trimmed.startsWith("### ")) {
+                        return <h3 key={idx}>{trimmed.replace("### ", "")}</h3>;
+                    }
+                    if (trimmed.startsWith("## ")) {
+                        return <h2 key={idx}>{trimmed.replace("## ", "")}</h2>;
+                    }
+                    if (trimmed.startsWith("# ")) {
+                        return <h1 key={idx}>{trimmed.replace("# ", "")}</h1>;
+                    }
+
+                    // Bullet points (- or *)
+                    if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+                        return (
+                            <ul key={idx}>
+                                <li>{trimmed.substring(2)}</li>
+                            </ul>
+                        );
+                    }
+
+                    // Numbered points (1. 2. 3.)
+                    if (/^\d+\.\s/.test(trimmed)) {
+                        return (
+                            <ol key={idx}>
+                                <li>{trimmed.replace(/^\d+\.\s/, "")}</li>
+                            </ol>
+                        );
+                    }
+
+                    // Normal paragraph
+                    return trimmed ? <p key={idx}>{trimmed}</p> : <br key={idx} />;
+                });
+            })}
         </>
     );
 };
+
+
 
 
