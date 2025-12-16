@@ -14,9 +14,10 @@ const MyBot: React.FC = () => {
 
     const anchorRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        anchorRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [response]);
+    // disable the scrolling feature
+    // useEffect(() => {
+    //     anchorRef.current?.scrollIntoView({ behavior: "smooth" });
+    // }, [response]);
 
     const handleStart = () => {
         resetTranscript();
@@ -175,4 +176,5 @@ const ResponseRenderer = ({ text }: { text: string }) => {
         </>
     );
 };
+
 
