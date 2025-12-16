@@ -7,7 +7,7 @@ const MyBot: React.FC = () => {
 
     const [response, setResponse] = useState("");
     const [loading, setLoading] = useState(false);
-    const [role, setRole] = useState("Full Stack Developer - Interview Helper");
+    const [role, setRole] = useState("Full Stack Developer provide coding on both Javascript and Java - Interview Helper");
     const [error, setError] = useState("");
     const [rememberContext, setRememberContext] = useState(false);
     const [savedPrompts, setSavedPrompts] = useState<string[]>([]);
@@ -175,3 +175,4 @@ const ResponseRenderer = ({ text }: { text: string }) => {
         </>
     );
 };
+
