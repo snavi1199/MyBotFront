@@ -184,57 +184,88 @@ const ResponseRenderer = ({ text }: { text: string }) => {
 
     return (
         <>
-            {blocks.map((block, i) => {
+            {blocks.map((block, blockIndex) => {
                 // CODE BLOCK
-                if (i % 2 === 1) {
+                if (blockIndex % 2 === 1) {
                     return (
-                        <pre key={i} className="code-block">
+                        <pre key={blockIndex} className="code-block">
                             <code>{block.trim()}</code>
                         </pre>
                     );
                 }
 
-                // NORMAL TEXT BLOCK
-                return block.split("\n").map((line, idx) => {
-                    const trimmed = line.trim();
+                const lines = block.split("\n");
+                const elements: JSX.Element[] = [];
 
-                    // Headings
-                    if (trimmed.startsWith("### ")) {
-                        return <h3 key={idx}>{trimmed.replace("### ", "")}</h3>;
-                    }
-                    if (trimmed.startsWith("## ")) {
-                        return <h2 key={idx}>{trimmed.replace("## ", "")}</h2>;
-                    }
-                    if (trimmed.startsWith("# ")) {
-                        return <h1 key={idx}>{trimmed.replace("# ", "")}</h1>;
-                    }
+                let bulletBuffer: string[] = [];
+                let numberBuffer: string[] = [];
 
-                    // Bullet points (- or *)
-                    if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
-                        return (
-                            <ul key={idx}>
-                                <li>{trimmed.substring(2)}</li>
+                const flushBullets = () => {
+                    if (bulletBuffer.length) {
+                        elements.push(
+                            <ul key={`ul-${elements.length}`} className="compact-list">
+                                {bulletBuffer.map((b, i) => <li key={i}>{b}</li>)}
                             </ul>
                         );
+                        bulletBuffer = [];
                     }
+                };
 
-                    // Numbered points (1. 2. 3.)
-                    if (/^\d+\.\s/.test(trimmed)) {
-                        return (
-                            <ol key={idx}>
-                                <li>{trimmed.replace(/^\d+\.\s/, "")}</li>
+                const flushNumbers = () => {
+                    if (numberBuffer.length) {
+                        elements.push(
+                            <ol key={`ol-${elements.length}`} className="compact-list">
+                                {numberBuffer.map((n, i) => <li key={i}>{n}</li>)}
                             </ol>
                         );
+                        numberBuffer = [];
+                    }
+                };
+
+                lines.forEach((line, i) => {
+                    const t = line.trim();
+                    if (!t) return;
+
+                    // Headings
+                    if (t.startsWith("### ")) {
+                        flushBullets();
+                        flushNumbers();
+                        elements.push(<h3 key={i}>{t.slice(4)}</h3>);
+                        return;
+                    }
+
+                    if (t.startsWith("## ")) {
+                        flushBullets();
+                        flushNumbers();
+                        elements.push(<h2 key={i}>{t.slice(3)}</h2>);
+                        return;
+                    }
+
+                    // Bullet points
+                    if (t.startsWith("- ") || t.startsWith("* ")) {
+                        flushNumbers();
+                        bulletBuffer.push(t.slice(2));
+                        return;
+                    }
+
+                    // Numbered points
+                    if (/^\d+\.\s/.test(t)) {
+                        flushBullets();
+                        numberBuffer.push(t.replace(/^\d+\.\s/, ""));
+                        return;
                     }
 
                     // Normal paragraph
-                    return trimmed ? <p key={idx}>{trimmed}</p> : <br key={idx} />;
+                    flushBullets();
+                    flushNumbers();
+                    elements.push(<p key={i} className="compact-text">{t}</p>);
                 });
+
+                flushBullets();
+                flushNumbers();
+
+                return <div key={blockIndex}>{elements}</div>;
             })}
         </>
     );
 };
-
-
-
-
