@@ -95,7 +95,6 @@ const MyBot: React.FC = () => {
             setError("Streaming failed");
         } finally {
             setLoading(false);
-            resetTranscript();
             SpeechRecognition.startListening({ continuous: true });
         }
     };
@@ -109,10 +108,12 @@ const MyBot: React.FC = () => {
             <h2>My Bot</h2>
 
             <select className="input" value={role} onChange={(e) => setRole(e.target.value)}>
-                <option>Full Stack Developer - Interview Helper</option>
-                <option>Java DSA Interview</option>
-                <option>Low Level System Design</option>
-                <option>High Level System Design</option>
+                <option value="Full Stack Developer provide coding on both Javascript and Java - Interview Helper">Full Stack Developer - Interview Helper</option>
+                <option value="Code using Javascript">JavaScript Coding</option>
+                <option value="Code using Java">Java Coding</option>
+                <option value="Java DSA Interview">Java DSA Interview</option>
+                <option value="Low Level System Design">Low Level System Design</option>
+                <option value="High Level System Design">High Level System Design</option>
             </select>
 
             <p className="status">
@@ -121,7 +122,7 @@ const MyBot: React.FC = () => {
 
             <div className="button-row">
                 <button onClick={handleStart}>Start</button>
-                <button onClick={handleStop} disabled={loading}>
+                <button onClick={handleStop} disabled={loading || !listening}>
                     Ask AI
                 </button>
                 <button onClick={() => resetTranscript()}>Clear</button>
