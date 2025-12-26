@@ -8,21 +8,28 @@ const MyBot: React.FC = () => {
     const [response, setResponse] = useState("");
     const [loading, setLoading] = useState(false);
     const [role, setRole] = useState(
-    "You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code, and interview tips."
+        "You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code, and interview tips."
     );
     const [error, setError] = useState("");
     const [rememberContext, setRememberContext] = useState(false);
+    const [lastCopy, setLastCopy] = useState("");
     const [savedPrompts, setSavedPrompts] = useState<string[]>([]);
+    const [displayTranscript, setDisplayTranscript] = useState("");
 
     const anchorRef = useRef<HTMLDivElement>(null);
 
-    // disable the scrolling feature
+     // disable the scrolling feature
     // useEffect(() => {
     //     anchorRef.current?.scrollIntoView({ behavior: "smooth" });
     // }, [response]);
 
+    useEffect(() => {
+        setDisplayTranscript(transcript);
+    }, [transcript]);
+
     const handleStart = () => {
         resetTranscript();
+        setDisplayTranscript("");
         setResponse("");
         SpeechRecognition.startListening({ continuous: true });
     };
@@ -30,13 +37,20 @@ const MyBot: React.FC = () => {
     const handleListenStop = () => {
         SpeechRecognition.stopListening();
         resetTranscript();
-        setResponse('');
-        setError('');
+        setDisplayTranscript("");
+        setResponse("");
+        setError("");
     };
 
+    const handleLastCopy = async () => {
+        if (!lastCopy) return;
+
+        await navigator.clipboard.writeText(lastCopy);
+        setDisplayTranscript(lastCopy);
+    };
 
     const handleStop = async () => {
-        if (!transcript.trim()) {
+        if (!displayTranscript.trim()) {
             setError("Say something first");
             return;
         }
@@ -45,12 +59,12 @@ const MyBot: React.FC = () => {
         setError("");
         setResponse("");
 
-
-        let combinedPrompt = transcript.trim();
-        console.log(rememberContext)
+        let combinedPrompt = displayTranscript.trim();
         if (rememberContext) {
-            combinedPrompt = [...savedPrompts, transcript.trim()].join(' and also ');
+            combinedPrompt = [...savedPrompts, displayTranscript.trim()].join(" and also ");
         }
+
+        setLastCopy(combinedPrompt);
 
         try {
             const res = await fetch("https://mybotbackend.onrender.com/api/chat", {
@@ -84,13 +98,13 @@ const MyBot: React.FC = () => {
                                 fullText += token;
                                 setResponse(fullText);
                             }
-                        } catch { }
+                        } catch {}
                     }
                 }
             }
 
             if (rememberContext) {
-                setSavedPrompts((p) => [...p, transcript]);
+                setSavedPrompts((p) => [...p, displayTranscript]);
             } else {
                 setSavedPrompts([]);
             }
@@ -111,31 +125,25 @@ const MyBot: React.FC = () => {
             <h2>My Bot</h2>
 
             <select className="input" value={role} onChange={(e) => setRole(e.target.value)}>
-    <option value="You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code, and interview tips.">
-        Full Stack Interview Helper (JS + Java)
-    </option>
-
-    <option value="You are a JavaScript expert. Provide JavaScript code examples and explanations.">
-        JavaScript Coding
-    </option>
-
-    <option value="You are a Java expert. Provide Java code examples and explanations.">
-        Java Coding
-    </option>
-
-    <option value="You are a Java DSA Interviewer. Explain approach, algorithm, Java code, and complexity.">
-        Java DSA Interview
-    </option>
-
-    <option value="You are a Low Level System Design interviewer. Explain with diagrams, classes, and code snippets.">
-        Low Level System Design
-    </option>
-
-    <option value="You are a High Level System Design interviewer. Explain architecture, trade-offs, and scalability.">
-        High Level System Design
-    </option>
-</select>
-
+                <option value="You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code, and interview tips.">
+                    Full Stack Interview Helper (JS + Java)
+                </option>
+                <option value="You are a JavaScript expert. Provide JavaScript code examples and explanations.">
+                    JavaScript Coding
+                </option>
+                <option value="You are a Java expert. Provide Java code examples and explanations.">
+                    Java Coding
+                </option>
+                <option value="You are a Java DSA Interviewer. Explain approach, algorithm, Java code, and complexity.">
+                    Java DSA Interview
+                </option>
+                <option value="You are a Low Level System Design interviewer. Explain with diagrams, classes, and code snippets.">
+                    Low Level System Design
+                </option>
+                <option value="You are a High Level System Design interviewer. Explain architecture, trade-offs, and scalability.">
+                    High Level System Design
+                </option>
+            </select>
 
             <p className="status">
                 {listening ? "🎤 Listening..." : "⏹ Stopped"}
@@ -147,17 +155,18 @@ const MyBot: React.FC = () => {
                     Ask AI
                 </button>
                 <button onClick={() => resetTranscript()}>Clear</button>
-                <button onClick={() => setRememberContext((prev) => !prev)}>
+                <button onClick={() => setRememberContext((p) => !p)}>
                     Prev: {rememberContext ? "ON" : "OFF"}
                 </button>
-                <button onClick={handleListenStop}>
-                    Stop
+                <button onClick={handleListenStop}>Stop</button>
+                <button onClick={handleLastCopy} disabled={!lastCopy}>
+                    Last Copy
                 </button>
             </div>
 
             <div className="chat user">
                 <strong>You:</strong>
-                <p>{transcript || "—"}</p>
+                <p>{displayTranscript || "—"}</p>
             </div>
 
             {loading && <p className="thinking">🤖 Thinking...</p>}
@@ -270,4 +279,3 @@ const ResponseRenderer = ({ text }: { text: string }) => {
         </>
     );
 };
-
