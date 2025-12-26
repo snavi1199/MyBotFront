@@ -12,20 +12,24 @@ const MyBot: React.FC = () => {
     );
     const [error, setError] = useState("");
     const [rememberContext, setRememberContext] = useState(false);
-    const [lastCopy, setLastCopy] = useState("");
     const [savedPrompts, setSavedPrompts] = useState<string[]>([]);
+
+    const [lastCopy, setLastCopy] = useState("");
     const [displayTranscript, setDisplayTranscript] = useState("");
 
     const anchorRef = useRef<HTMLDivElement>(null);
 
-     // disable the scrolling feature
+    // disable the scrolling feature
     // useEffect(() => {
     //     anchorRef.current?.scrollIntoView({ behavior: "smooth" });
     // }, [response]);
 
+    // keep displayTranscript in sync with live speech
     useEffect(() => {
-        setDisplayTranscript(transcript);
-    }, [transcript]);
+        if (listening) {
+            setDisplayTranscript(transcript);
+        }
+    }, [transcript, listening]);
 
     const handleStart = () => {
         resetTranscript();
@@ -44,9 +48,8 @@ const MyBot: React.FC = () => {
 
     const handleLastCopy = async () => {
         if (!lastCopy) return;
-
         await navigator.clipboard.writeText(lastCopy);
-        setDisplayTranscript(lastCopy);
+        setDisplayTranscript(lastCopy); // restore previous question
     };
 
     const handleStop = async () => {
@@ -55,16 +58,23 @@ const MyBot: React.FC = () => {
             return;
         }
 
+        const currentQuestion = displayTranscript.trim();
+
+        // ✅ store previous question
+        setLastCopy(currentQuestion);
+
         setLoading(true);
         setError("");
         setResponse("");
 
-        let combinedPrompt = displayTranscript.trim();
+        let combinedPrompt = currentQuestion;
         if (rememberContext) {
-            combinedPrompt = [...savedPrompts, displayTranscript.trim()].join(" and also ");
+            combinedPrompt = [...savedPrompts, currentQuestion].join(" and also ");
         }
 
-        setLastCopy(combinedPrompt);
+        // ✅ clear transcript box immediately after Ask AI
+        resetTranscript();
+        setDisplayTranscript("");
 
         try {
             const res = await fetch("https://mybotbackend.onrender.com/api/chat", {
@@ -98,13 +108,13 @@ const MyBot: React.FC = () => {
                                 fullText += token;
                                 setResponse(fullText);
                             }
-                        } catch {}
+                        } catch { }
                     }
                 }
             }
 
             if (rememberContext) {
-                setSavedPrompts((p) => [...p, displayTranscript]);
+                setSavedPrompts((p) => [...p, currentQuestion]);
             } else {
                 setSavedPrompts([]);
             }
@@ -125,8 +135,14 @@ const MyBot: React.FC = () => {
             <h2>My Bot</h2>
 
             <select className="input" value={role} onChange={(e) => setRole(e.target.value)}>
-                <option value="You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code, and interview tips.">
+                <option value="You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code">
                     Full Stack Interview Helper (JS + Java)
+                </option>
+                <option value="You are a Full Stack Interview Helper. Explain the topic clearly JavaScript example code.">
+                    Full Stack Interview Helper (JS)
+                </option>
+                 <option value="You are a Full Stack Interview Helper. Explain the topic clearly Java example code.">
+                    Full Stack Interview Helper (Java)
                 </option>
                 <option value="You are a JavaScript expert. Provide JavaScript code examples and explanations.">
                     JavaScript Coding
@@ -154,7 +170,7 @@ const MyBot: React.FC = () => {
                 <button onClick={handleStop} disabled={loading || !listening}>
                     Ask AI
                 </button>
-                <button onClick={() => resetTranscript()}>Clear</button>
+                <button onClick={() => { resetTranscript(); setDisplayTranscript(""); }}>Clear</button>
                 <button onClick={() => setRememberContext((p) => !p)}>
                     Prev: {rememberContext ? "ON" : "OFF"}
                 </button>
