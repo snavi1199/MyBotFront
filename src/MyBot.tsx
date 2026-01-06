@@ -150,6 +150,9 @@ const MyBot: React.FC = () => {
                 <option value="You are a Java expert. Provide Java code examples and explanations.">
                     Java Coding
                 </option>
+                <option value="You are an MCQ Helper. Analyze the question, explain each option, identify the correct answer with reasoning, and provide tips for similar questions.">
+                    MCQ Helper
+                </option>
                 <option value="You are a Java DSA Interviewer. Explain approach, algorithm, Java code, and complexity.">
                     Java DSA Interview
                 </option>
@@ -167,7 +170,7 @@ const MyBot: React.FC = () => {
 
             <div className="button-row">
                 <button onClick={handleStart}>Start</button>
-                <button onClick={handleStop} disabled={loading || !listening}>
+                <button onClick={handleStop}>
                     Ask AI
                 </button>
                 <button onClick={() => { resetTranscript(); setDisplayTranscript(""); }}>Clear</button>
@@ -295,3 +298,4 @@ const ResponseRenderer = ({ text }: { text: string }) => {
         </>
     );
 };
+
