@@ -150,6 +150,9 @@ const MyBot: React.FC = () => {
                 <option value="You are a Java expert. Provide Java code examples and explanations.">
                     Java Coding
                 </option>
+                <option value="You are an Online Assessment Expert. Identify the correct Answer for the question.">
+                    Online Assessment
+                </option>
                 <option value="You are an MCQ Helper. Analyze the question, explain each option, identify the correct answer with reasoning, and provide tips for similar questions.">
                     MCQ Helper
                 </option>
@@ -298,4 +301,5 @@ const ResponseRenderer = ({ text }: { text: string }) => {
         </>
     );
 };
+
 
