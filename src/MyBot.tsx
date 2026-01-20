@@ -7,6 +7,7 @@ const MyBot: React.FC = () => {
 
     const [response, setResponse] = useState("");
     const [loading, setLoading] = useState(false);
+    const [apiKey, setApiKey] = useState("");
     const [role, setRole] = useState(
         "You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code, and interview tips."
     );
@@ -80,7 +81,8 @@ const MyBot: React.FC = () => {
             const res = await fetch("https://mybotbackend.onrender.com/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ prompt: combinedPrompt, role }),
+                // body: JSON.stringify({ prompt: combinedPrompt, role }), 
+                body: JSON.stringify({ prompt: combinedPrompt, role, apiKey }),    //added new api key feature            
             });
 
             if (!res.body) throw new Error("No stream");
@@ -185,6 +187,9 @@ const MyBot: React.FC = () => {
                 <button onClick={() => { resetTranscript(); setDisplayTranscript(""); }}>Clear</button>
                 <button onClick={() => setRememberContext((p) => !p)}>
                     Prev: {rememberContext ? "ON" : "OFF"}
+                </button>
+                <button onClick={() => setApiKey("873c7221e01c68adb678623298f71215db20b7787bdad3f9c6060783f07140da")}>
+                    New Key
                 </button>
                 <button onClick={handleListenStop}>Stop</button>
                 <button onClick={handleLastCopy} disabled={!lastCopy}>
@@ -307,6 +312,7 @@ const ResponseRenderer = ({ text }: { text: string }) => {
         </>
     );
 };
+
 
 
 
