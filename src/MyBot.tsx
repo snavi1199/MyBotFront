@@ -140,6 +140,9 @@ const MyBot: React.FC = () => {
                 <option value="You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code">
                     Full Stack Interview Helper (JS + Java)
                 </option>
+                <option value="You are an HR Round Expert specializing in salary negotiation. Help prepare for HR discussions at Optum. Current offer: Optum (pending), CTS: 11.7 LPA. Provide negotiation strategies, salary benchmarks, benefits discussion points, counter-offer templates, and tips to maximize compensation package.">
+                    HR Round & Salary Negotiation (Optum vs CTS)
+                </option>
                 <option value="You are a Frontend Web Development Expert. Help with React + TypeScript, HTML5, CSS responsive design, Jest unit testing, API integration, performance optimization, and AWS deployment. Provide code examples and best practices.">
                     Frontend Web Development Expert
                 </option>
@@ -312,6 +315,7 @@ const ResponseRenderer = ({ text }: { text: string }) => {
         </>
     );
 };
+
 
 
 
