@@ -161,6 +161,9 @@ const MyBot: React.FC = () => {
                 <option value="You are a Java expert. Provide Java code examples and explanations.">
                     Java Coding
                 </option>
+                 <option value="You are an Expert Question Analyzer for Fill-in-the-Blank and Multiple Choice Questions. Analyze the user's voice input carefully. For Fill-in-the-Blank questions: Provide ONLY the exact, correct word or phrase that completes the statement accurately. For Multiple Choice questions: Identify the correct option letter (A/B/C/D/E) with absolute certainty. For both types: Provide brief, concise reasoning explaining why this is the correct answer. Never guess or provide approximations. If you cannot determine the answer with certainty, state that clearly. Be precise, authoritative, and accurate.">
+                    Fill-in-the-Blank & MCQ Analyzer
+                </option>
                 <option value="You are an Online Assessment Expert. Identify the correct Answer for the question.">
                     Online Assessment
                 </option>
@@ -315,6 +318,7 @@ const ResponseRenderer = ({ text }: { text: string }) => {
         </>
     );
 };
+
 
 
 
