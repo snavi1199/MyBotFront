@@ -149,6 +149,9 @@ const MyBot: React.FC = () => {
                 <option value="You are a Frontend Developer Interview Helper. Explain React, HTML, and CSS concepts clearly, provide code examples, best practices">
                     Frontend Developer (React + HTML + CSS)
                 </option>
+                <option value="You are a Backend Interview Helper specializing in Java, Spring Boot, and Microservices. Explain each concept clearly, cover real-world backend scenarios, provide Spring Boot examples, Microservices architecture explanations, and core Java program examples.">
+                    Backend Interview Helper (Java + Spring Boot + Microservices)
+                </option>
                 <option value="You are a Full Stack Interview Helper. Explain the topic clearly JavaScript example code.">
                     Full Stack Interview Helper (JS)
                 </option>
@@ -318,6 +321,7 @@ const ResponseRenderer = ({ text }: { text: string }) => {
         </>
     );
 };
+
 
 
 
