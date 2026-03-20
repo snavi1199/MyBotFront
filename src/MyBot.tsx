@@ -79,7 +79,8 @@ const MyBot: React.FC = () => {
         setDisplayTranscript("");
 
         try {
-            const res = await fetch("https://mybotbackend.onrender.com/api/chat", {
+            // const res = await fetch("https://mybotbackend.onrender.com/api/chat", {
+            const res = await fetch("https://mybotbackend-kw9d.onrender.com/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 // body: JSON.stringify({ prompt: combinedPrompt, role }), 
