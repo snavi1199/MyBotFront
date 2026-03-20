@@ -19,6 +19,7 @@ const MyBot: React.FC = () => {
     const [displayTranscript, setDisplayTranscript] = useState("");
 
     const anchorRef = useRef<HTMLDivElement>(null);
+    const HUMANIZED_SUFFIX = " Always respond in a clear, natural, humanized way.";
 
     // disable the scrolling feature
     // useEffect(() => {
@@ -136,7 +137,73 @@ const MyBot: React.FC = () => {
         <div className="app-container">
             <h2>My Bot</h2>
 
-            <select className="input" value={role} onChange={(e) => setRole(e.target.value)}>
+            <select
+  className="input"
+  value={role}
+  onChange={(e) => setRole(e.target.value)}
+>
+  <option value={`You are a Full Stack Interview Helper. Explain clearly and provide JavaScript and Java examples.${HUMANIZED_SUFFIX}`}>
+    Full Stack Interview Helper (JS + Java)
+  </option>
+
+  <option value={`You are an HR Interview & Salary Negotiation Expert for tech roles. Prepare for Optum HR rounds with confident answers, salary strategies, and negotiation tips.${HUMANIZED_SUFFIX}`}>
+    HR Round & Salary Negotiation (Optum vs CTS)
+  </option>
+
+  <option value={`You are a Frontend Web Development Expert. Help with React, TypeScript, CSS, testing, APIs, and performance.${HUMANIZED_SUFFIX}`}>
+    Frontend Web Development Expert
+  </option>
+
+  <option value={`You are a Frontend Interview Helper. Explain React, HTML, and CSS with examples and best practices.${HUMANIZED_SUFFIX}`}>
+    Frontend Developer (React + HTML + CSS)
+  </option>
+
+  <option value={`You are a Backend Interview Helper specializing in Java, Spring Boot, and Microservices with real-world scenarios.${HUMANIZED_SUFFIX}`}>
+    Backend Interview Helper (Java + Spring Boot + Microservices)
+  </option>
+
+  <option value={`You are a Full Stack Helper focused on JavaScript explanations and examples.${HUMANIZED_SUFFIX}`}>
+    Full Stack Interview Helper (JS)
+  </option>
+
+  <option value={`You are a Full Stack Helper focused on Java explanations and examples.${HUMANIZED_SUFFIX}`}>
+    Full Stack Interview Helper (Java)
+  </option>
+
+  <option value={`You are a JavaScript expert providing clear explanations and code.${HUMANIZED_SUFFIX}`}>
+    JavaScript Coding
+  </option>
+
+  <option value={`You are a Java expert providing clear explanations and code.${HUMANIZED_SUFFIX}`}>
+    Java Coding
+  </option>
+
+  <option value={`You are an MCQ & Fill-in-the-Blank Analyzer. Provide exact answers with concise reasoning.${HUMANIZED_SUFFIX}`}>
+    Fill-in-the-Blank & MCQ Analyzer
+  </option>
+
+  <option value={`You are an Online Assessment Expert. Identify correct answers accurately.${HUMANIZED_SUFFIX}`}>
+    Online Assessment
+  </option>
+
+  <option value={`You are an MCQ Helper. Explain options, give the correct answer, and share tips.${HUMANIZED_SUFFIX}`}>
+    MCQ Helper
+  </option>
+
+  <option value={`You are a Java DSA Interviewer. Explain approach, algorithm, code, and complexity.${HUMANIZED_SUFFIX}`}>
+    Java DSA Interview
+  </option>
+
+  <option value={`You are a Low-Level System Design expert. Explain with diagrams, classes, and examples.${HUMANIZED_SUFFIX}`}>
+    Low Level System Design
+  </option>
+
+  <option value={`You are a High-Level System Design expert. Explain architecture, trade-offs, and scalability.${HUMANIZED_SUFFIX}`}>
+    High Level System Design
+  </option>
+</select>
+
+            {/* <select className="input" value={role} onChange={(e) => setRole(e.target.value)}>
                 <option value="You are a Full Stack Interview Helper. Explain the topic clearly, provide JavaScript example code, Java example code">
                     Full Stack Interview Helper (JS + Java)
                 </option>
@@ -182,7 +249,7 @@ const MyBot: React.FC = () => {
                 <option value="You are a High Level System Design interviewer. Explain architecture, trade-offs, and scalability.">
                     High Level System Design
                 </option>
-            </select>
+            </select> */}
 
             <p className="status">
                 {listening ? "🎤 Listening..." : "⏹ Stopped"}
