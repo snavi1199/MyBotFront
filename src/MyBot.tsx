@@ -26,7 +26,7 @@ const MyBot: React.FC = () => {
     //     anchorRef.current?.scrollIntoView({ behavior: "smooth" });
     // }, [response]);
 
-    // keep displayTranscript in sync with live speech
+    // keep displayTranscript in sync with live transcript speech
     useEffect(() => {
         if (listening) {
             setDisplayTranscript(transcript);
